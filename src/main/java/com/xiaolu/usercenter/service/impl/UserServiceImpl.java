@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -78,6 +79,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         long count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "账户已注册");
+        }
+
+        List<String> deerCodes = new ArrayList<>();
+        for (int i = 1; i < 5; i++) {
+            deerCodes.add(i + "");
+        }
+        if (!(deerCodes.contains(deerCode))) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "晓鹿编号错误");
         }
 
         // 鹿编号不能重复
