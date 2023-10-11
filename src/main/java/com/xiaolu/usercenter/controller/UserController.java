@@ -35,17 +35,10 @@ public class UserController {
     @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         if (userRegisterRequest == null) {
-            // return ResultUtils.error(ErrorCode.PARAMS_ERROR);
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        String deerCode = userRegisterRequest.getDeerCode();
-        String userAccount = userRegisterRequest.getUserAccount();
-        String userPassword = userRegisterRequest.getUserPassword();
-        String checkPassword = userRegisterRequest.getCheckPassword();
-        if (StringUtils.isAnyBlank(deerCode, userAccount, userPassword, checkPassword)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        long result = userService.userRegister(userAccount, userPassword, checkPassword, deerCode);
+
+        long result = userService.userRegister(userRegisterRequest);
         return ResultUtils.success(result);
     }
 

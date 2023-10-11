@@ -15,10 +15,19 @@ public class BaseResponse<T> implements Serializable {
 
     private static final long serialVersionUID = 4533795319073769863L;
 
+    /**
+     * 响应码
+     */
     private int code;
 
+    /**
+     * 数据
+     */
     private T data;
 
+    /**
+     * 描述信息
+     */
     private String message;
 
     private String description;

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaolu.usercenter.common.ErrorCode;
 import com.xiaolu.usercenter.exception.BusinessException;
 import com.xiaolu.usercenter.model.domain.User;
+import com.xiaolu.usercenter.model.domain.request.UserRegisterRequest;
 import com.xiaolu.usercenter.service.UserService;
 import com.xiaolu.usercenter.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -38,12 +39,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      */
     private static final String SALT = "xiaolu";
 
-
-
     @Override
-    public long userRegister(String userAccount, String userPassword, String checkPassword, String deerCode) {
+    public long userRegister(UserRegisterRequest userRegisterRequest) {
+        String deerCode = userRegisterRequest.getDeerCode();
+        String username = userRegisterRequest.getUsername();
+        String userAccount = userRegisterRequest.getUserAccount();
+        String userPassword = userRegisterRequest.getUserPassword();
+        String checkPassword = userRegisterRequest.getCheckPassword();
+
         // 使用apache.commons工具类一键判断是否为空长度为0的情况
-        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, deerCode)) {
+        if (StringUtils.isAnyBlank(username, userAccount, userPassword, checkPassword, deerCode)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
         }
         if (userAccount.length() < 4) {
@@ -63,7 +68,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (matcher.find()) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "账户包含特殊字符");
         }
-        // 密码和校验密码相同
+        // 密码和校验密码不相同
         if (!userPassword.equals(checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "密码不一致");
         }
@@ -86,6 +91,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 加密并存储
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
         User user = new User();
+        user.setUsername(username);
         user.setUserAccount(userAccount);
         user.setUserPassword(encryptPassword);
         user.setDeerCode(deerCode);

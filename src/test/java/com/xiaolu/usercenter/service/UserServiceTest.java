@@ -39,14 +39,14 @@ class UserServiceTest {
     }
 
     // @Test
-    void userRegister() {
-        String userAccount = "xiaolu2";
-        String userPassword = "123456789";
-        String checkPassword = "123456789";
-        String deerCode = "1";
-
-        long result = userService.userRegister(userAccount, userPassword, checkPassword, deerCode);
-        Assertions.assertTrue(result > 0);
-
-    }
+    // void userRegister() {
+    //     String userAccount = "xiaolu2";
+    //     String userPassword = "123456789";
+    //     String checkPassword = "123456789";
+    //     String deerCode = "1";
+    //
+    //     long result = userService.userRegister(userAccount, userPassword, checkPassword, deerCode);
+    //     Assertions.assertTrue(result > 0);
+    //
+    // }
 }

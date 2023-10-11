@@ -2,6 +2,7 @@ package com.xiaolu.usercenter.service;
 
 import com.xiaolu.usercenter.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xiaolu.usercenter.model.domain.request.UserRegisterRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -19,13 +20,10 @@ public interface UserService extends IService<User> {
 
     /**
      * 用户注册
-     * @param userAccount 用户账户
-     * @param userPassword 用户密码
-     * @param checkPassword 校验密码
-     * @param deerCode 鹿编号
+     * @param userRegisterRequest 用户请求对象
      * @return 新用户id
      */
-    long userRegister(String userAccount, String userPassword, String checkPassword, String deerCode);
+    long userRegister(UserRegisterRequest userRegisterRequest);
 
     /**
      * 用户登录
