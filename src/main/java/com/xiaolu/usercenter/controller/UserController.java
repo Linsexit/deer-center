@@ -1,11 +1,15 @@
 package com.xiaolu.usercenter.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xiaolu.usercenter.common.BaseResponse;
 import com.xiaolu.usercenter.common.ErrorCode;
 import com.xiaolu.usercenter.exception.BusinessException;
+import com.xiaolu.usercenter.model.domain.Chat;
 import com.xiaolu.usercenter.model.domain.User;
 import com.xiaolu.usercenter.model.domain.request.UserLoginRequest;
 import com.xiaolu.usercenter.model.domain.request.UserRegisterRequest;
+import com.xiaolu.usercenter.service.ChatService;
 import com.xiaolu.usercenter.service.UserService;
 import com.xiaolu.usercenter.utils.ResultUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +35,9 @@ public class UserController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private ChatService chatService;
 
     @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
@@ -99,6 +106,36 @@ public class UserController {
         }
         boolean result = userService.removeById(id);
         return ResultUtils.success(result);
+    }
+
+    @GetMapping("/chat/list")
+    public BaseResponse<List<Chat>> chatList(int page, HttpServletRequest request) {
+
+        List<Chat> list = chatService.searchChats(request, page);
+        return ResultUtils.success(list);
+    }
+
+    @PostMapping("/chat")
+    public BaseResponse<Chat> chat(@RequestBody String quest, HttpServletRequest request) {
+
+        Chat chat = chatService.addChat(request, quest);
+
+        return ResultUtils.success(chat);
+    }
+
+    @GetMapping("/chat/delChat")
+    public BaseResponse<Integer> delChat(HttpServletRequest request) {
+        User currentUser = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN) ;
+        }
+        LambdaQueryWrapper<Chat> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Chat::getUserid, currentUser.getId());
+
+        if (!chatService.remove(queryWrapper)) {
+            throw new BusinessException(ErrorCode.CHAT_REQUEST_ERROR, "清空失败") ;
+        }
+        return ResultUtils.success(0);
     }
 
     /**

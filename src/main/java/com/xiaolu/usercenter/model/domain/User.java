@@ -16,7 +16,7 @@ public class User implements Serializable {
     /**
      * id
      */
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
@@ -84,6 +84,9 @@ public class User implements Serializable {
      * 小鹿编号
      */
     private String deerCode;
+
+    @TableField(exist = false)
+    private Long totalPage = 999L;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
