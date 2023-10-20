@@ -10,6 +10,7 @@ import com.yupi.yucongming.dev.common.BaseResponse;
 import com.yupi.yucongming.dev.model.DevChatRequest;
 import com.yupi.yucongming.dev.model.DevChatResponse;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
@@ -19,6 +20,12 @@ class UserCenterApplicationTests {
 
 	@Resource
 	private ChatService chatService;
+
+	@Resource
+	private YuCongMingClient client;
+
+	@Value("${deer.chatType}")
+	private Long chatType;
 
 	@Test
 	void contextLoads() {
@@ -38,6 +45,19 @@ class UserCenterApplicationTests {
 		System.out.println("总记录数： "+ chatPage.getTotal());
 		chatPage.getRecords().forEach(System.out::println);
 
+	}
+
+	@Test
+	public void chatgpt() {
+		// 构建请求参数
+		DevChatRequest devChatRequest = new DevChatRequest();
+		devChatRequest.setModelId(chatType);
+		devChatRequest.setMessage("hello");
+
+		// 获取响应结果
+		BaseResponse<DevChatResponse> response = client.doChat(devChatRequest);
+
+		System.out.println(response.getData().getContent());
 	}
 
 }
