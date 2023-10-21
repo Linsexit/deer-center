@@ -81,6 +81,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "账户已注册");
         }
 
+        // 通过晓鹿编号限制只允许四个用户 [1,2,3,4]
         List<String> deerCodes = new ArrayList<>();
         for (int i = 1; i < 5; i++) {
             deerCodes.add(i + "");
