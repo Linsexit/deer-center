@@ -28,3 +28,17 @@ create table chat
     createTime datetime default CURRENT_TIMESTAMP null comment '创建时间'
 )
     comment '用户';
+
+alter table user add COLUMN tags varchar(1024) null comment '标签列表';
+
+-- auto-generated definition
+create table chat
+(
+    id         bigint                             not null comment 'id'
+        primary key,
+    userid     bigint                             not null comment '用户id',
+    content    varchar(2050)                      not null comment '内容',
+    createTime datetime default CURRENT_TIMESTAMP null comment '创建时间'
+)
+    comment '用户';
+

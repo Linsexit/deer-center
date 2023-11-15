@@ -1,8 +1,10 @@
 package com.xiaolu.usercenter.service;
 
-import java.util.Date;
+import java.util.Arrays;
+import java.util.List;
 
 import com.xiaolu.usercenter.model.domain.User;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +18,7 @@ import javax.annotation.Resource;
  * @create 2023/9/27 11:09
  * @Description 用户服务测试
  */
-// @SpringBootTest
+@SpringBootTest
 class UserServiceTest {
 
     @Resource
@@ -49,4 +51,11 @@ class UserServiceTest {
     //     Assertions.assertTrue(result > 0);
     //
     // }
+
+    @Test
+    public void testSearchUsersByTags() {
+        List<String> tagNameList = Arrays.asList("java", "c");
+        List<User> userList = userService.searchUsersByTags(tagNameList);
+        Assert.assertNotNull(userList);
+    }
 }

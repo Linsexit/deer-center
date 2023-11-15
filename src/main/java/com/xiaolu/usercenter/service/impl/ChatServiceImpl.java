@@ -43,6 +43,8 @@ public class ChatServiceImpl extends ServiceImpl<ChatMapper, Chat>
 
     private final int pageSize = 10;
 
+
+
     @Override
     public List<Chat> searchChats(HttpServletRequest request, int page) {
         User currentUser = (User) request.getSession().getAttribute(USER_LOGIN_STATE);

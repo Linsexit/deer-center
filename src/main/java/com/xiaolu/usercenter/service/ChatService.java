@@ -14,7 +14,19 @@ import java.util.List;
 */
 public interface ChatService extends IService<Chat> {
 
+    /**
+     * 查询历史记录
+     * @param request
+     * @param page
+     * @return
+     */
     List<Chat> searchChats(HttpServletRequest request, int page);
 
+    /**
+     * 调用chatGpt接口并存储结果
+     * @param request
+     * @param quest
+     * @return
+     */
     Chat addChat(HttpServletRequest request, String quest);
 }
