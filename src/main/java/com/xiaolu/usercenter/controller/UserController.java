@@ -33,9 +33,7 @@ import static com.xiaolu.usercenter.contant.UserConstant.USER_LOGIN_STATE;
  */
 @RestController
 @RequestMapping("/user")
-// 允许指定跨域请求通过,
-// TODO: 2023/11/7 生产环境不能用这种方式，待优化
-
+// 允许指定跨域请求通过
 // @CrossOrigin(origins = {"http://127.0.0.1:5173","http://localhost:8000"})
 public class UserController {
 

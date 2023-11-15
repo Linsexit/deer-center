@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @create 2023/11/12 23:27
  * @Description
  */
-@SpringBootConfiguration
+// @SpringBootConfiguration
 class MyWebConfigurer implements WebMvcConfigurer {
 
     @Override
