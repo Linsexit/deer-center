@@ -3,9 +3,9 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://117.72.17.110:3306/user_center?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-      username: xiaolu
-      password: 520014
+      url: jdbc:mysql://xxx:3306/user_center?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      username: 
+      password: 
   # session超时时间（分钟）
   # 默认 store-type为 none 表示存储到内存中
   session:
@@ -14,7 +14,7 @@ spring:
 
 yuapi:
   client:
-    access-key: l5s5zli35utd974zy0vyxah0i08t8a9w
-    secret-key: 68iup8r47913htmigo87u1taf0xow20d
+    access-key: 
+    secret-key: 
 deer:
-  chatType: 1715378422630731777
+  chatType: 
