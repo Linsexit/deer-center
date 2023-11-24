@@ -8,7 +8,7 @@ import com.xiaolu.usercenter.common.ErrorCode;
 import com.xiaolu.usercenter.contant.UserConstant;
 import com.xiaolu.usercenter.exception.BusinessException;
 import com.xiaolu.usercenter.model.domain.User;
-import com.xiaolu.usercenter.model.domain.request.UserRegisterRequest;
+import com.xiaolu.usercenter.model.request.UserRegisterRequest;
 import com.xiaolu.usercenter.service.UserService;
 import com.xiaolu.usercenter.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;

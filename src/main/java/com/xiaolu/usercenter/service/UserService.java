@@ -2,13 +2,10 @@ package com.xiaolu.usercenter.service;
 
 import com.xiaolu.usercenter.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.xiaolu.usercenter.model.domain.request.UserRegisterRequest;
+import com.xiaolu.usercenter.model.request.UserRegisterRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-
-import static com.xiaolu.usercenter.contant.UserConstant.ADMIN_ROLE;
-import static com.xiaolu.usercenter.contant.UserConstant.USER_LOGIN_STATE;
 
 /**
  * 用户服务

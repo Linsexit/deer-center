@@ -10,13 +10,18 @@ spring:
 #    url: jdbc:mysql://localhost:3306/lu
 #    username: root
 #    password: 123456
-
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/lu
+      url: jdbc:mysql://localhost:3306/lu?serverTimezone=Asia/Shanghai
       username: root
       password: 123456
+      initial-size: 5
+      max-active: 50
+      max-wait: 5000
+      #最小空闲值.当空闲的连接数少于阀值时，连接池就会预申请去一些连接，以免洪峰来时来不及申请。
+      min-idle: 5
+
   # session超时时间
   session:
     timeout: 86400
@@ -49,6 +54,7 @@ server:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
+    # 日志
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:

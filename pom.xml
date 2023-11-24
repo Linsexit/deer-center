@@ -70,6 +70,13 @@
 			<artifactId>spring-session-data-redis</artifactId>
 			<version>2.6.4</version>
 		</dependency>
+		<!--https://github.com/redisson/redisson#quick-start-->
+		<!-- 一个高效处理分布式 redis 的库-->
+		<dependency>
+			<groupId>org.redisson</groupId>
+			<artifactId>redisson</artifactId>
+			<version>3.17.5</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>
@@ -77,6 +84,13 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.12.0</version>
 		</dependency>
+		<!--apache工具类 用于copy 处理 DTO的类-->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.9.4</version>
+		</dependency>
+
 		<!--鱼聪明 SDK-->
 		<dependency>
 			<groupId>com.yucongming</groupId>

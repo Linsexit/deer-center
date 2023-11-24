@@ -8,9 +8,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author 林小鹿
  * @version 1.0
  * @create 2023/11/12 23:27
- * @Description
+ * @Description springMVC处理跨域请求
  */
-// @SpringBootConfiguration
+@SpringBootConfiguration
 class MyWebConfigurer implements WebMvcConfigurer {
 
     @Override

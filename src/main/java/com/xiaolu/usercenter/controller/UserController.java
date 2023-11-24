@@ -2,27 +2,29 @@ package com.xiaolu.usercenter.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xiaolu.usercenter.common.BaseResponse;
 import com.xiaolu.usercenter.common.ErrorCode;
 import com.xiaolu.usercenter.exception.BusinessException;
 import com.xiaolu.usercenter.model.domain.Chat;
 import com.xiaolu.usercenter.model.domain.User;
-import com.xiaolu.usercenter.model.domain.request.UserLoginRequest;
-import com.xiaolu.usercenter.model.domain.request.UserRegisterRequest;
+import com.xiaolu.usercenter.model.request.UserLoginRequest;
+import com.xiaolu.usercenter.model.request.UserRegisterRequest;
 import com.xiaolu.usercenter.service.ChatService;
 import com.xiaolu.usercenter.service.UserService;
 import com.xiaolu.usercenter.utils.ResultUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 
-import static com.xiaolu.usercenter.contant.UserConstant.ADMIN_ROLE;
 import static com.xiaolu.usercenter.contant.UserConstant.USER_LOGIN_STATE;
 
 /**
@@ -33,12 +35,16 @@ import static com.xiaolu.usercenter.contant.UserConstant.USER_LOGIN_STATE;
  */
 @RestController
 @RequestMapping("/user")
+@Slf4j
 // 允许指定跨域请求通过
 // @CrossOrigin(origins = {"http://127.0.0.1:5173","http://localhost:8000"})
 public class UserController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Resource
     private ChatService chatService;
@@ -109,12 +115,26 @@ public class UserController {
     }
 
     @GetMapping("/recommend")
-    public BaseResponse<List<User>> recommendUsers(HttpServletRequest request) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+    public BaseResponse<Page<User>> recommendUsers(long pageSize, long pageNum, HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request);
+        // 如果有缓存，直接读缓存
+        String redisKey = String.format("xiaolu:user:recommend:%s", loginUser.getId());
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+        Page<User> userPage = (Page<User>) valueOperations.get(redisKey);
+        if (userPage != null) {
+            return ResultUtils.success(userPage);
+        }
 
-        List<User> userList = userService.list(queryWrapper);
-        List<User> list = userList.stream().map(user -> userService.getSafetyUser(user)).collect(Collectors.toList());
-        return ResultUtils.success(list);
+        // 无缓存再查询并存到缓存中
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        userPage = userService.page(new Page<>(pageNum, pageSize), queryWrapper);
+        try {
+            valueOperations.set(redisKey, userPage, 6, TimeUnit.HOURS);
+        } catch (Exception e) {
+            log.error("redis key error", e);
+        }
+
+        return ResultUtils.success(userPage);
     }
 
     @PostMapping("/update")
