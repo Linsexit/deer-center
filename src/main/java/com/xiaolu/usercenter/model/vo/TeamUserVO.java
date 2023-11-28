@@ -1,4 +1,4 @@
-package com.xiaolu.usercenter.model.request;
+package com.xiaolu.usercenter.model.vo;
 
 import lombok.Data;
 
@@ -8,13 +8,18 @@ import java.util.Date;
 /**
  * @author 林小鹿
  * @version 1.0
- * @create 2023/9/28 20:49
- * @Description 用户登录请求体
+ * @create 2023/11/24 16:41
+ * @Description 队伍和用户信息返回给前端的封装类 (脱敏)
  */
 @Data
-public class TeamAddRequest implements Serializable {
+public class TeamUserVO implements Serializable {
 
-    private static final long serialVersionUID = 6109047970680008363L;
+    private static final long serialVersionUID = -8466520384216214595L;
+
+    /**
+     * id
+     */
+    private Long id;
 
     /**
      * 队伍名称
@@ -46,10 +51,20 @@ public class TeamAddRequest implements Serializable {
      */
     private Integer status;
 
-    /**
-     * 密码
-     */
-    private String password;
 
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
+
+    /**
+     * 创建人用户信息
+     */
+    UserVO createUser;
 
 }

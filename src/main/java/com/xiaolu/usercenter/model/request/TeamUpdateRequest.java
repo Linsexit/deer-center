@@ -12,9 +12,14 @@ import java.util.Date;
  * @Description 用户登录请求体
  */
 @Data
-public class TeamAddRequest implements Serializable {
+public class TeamUpdateRequest implements Serializable {
 
     private static final long serialVersionUID = 6109047970680008363L;
+
+    /**
+     * id
+     */
+    private Long id;
 
     /**
      * 队伍名称
@@ -27,19 +32,9 @@ public class TeamAddRequest implements Serializable {
     private String description;
 
     /**
-     * 最大人数
-     */
-    private Integer maxNum;
-
-    /**
      * 过期时间
      */
     private Date expireTime;
-
-    /**
-     * 用户id
-     */
-    private Long userId;
 
     /**
      * 0 - 公开，1 - 私有 2 - 加密
