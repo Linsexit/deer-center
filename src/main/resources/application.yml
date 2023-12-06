@@ -64,7 +64,9 @@ mybatis-plus:
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
 yuapi:
   client:
-    access-key: 
-    secret-key: 
+    access-key: l5s5zli35utd974zy0vyxah0i08t8a9w
+    secret-key: 68iup8r47913htmigo87u1taf0xow20d
 deer:
-  chatType: 
+  chatType: 1715378422630731777
+  whitelistDeerCode: A168,B705,X970,SDI8,FO82
+

@@ -1,5 +1,6 @@
 package com.xiaolu.usercenter.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.gson.Gson;
@@ -9,10 +10,14 @@ import com.xiaolu.usercenter.contant.UserConstant;
 import com.xiaolu.usercenter.exception.BusinessException;
 import com.xiaolu.usercenter.model.domain.User;
 import com.xiaolu.usercenter.model.request.UserRegisterRequest;
+import com.xiaolu.usercenter.model.vo.UserVO;
 import com.xiaolu.usercenter.service.UserService;
 import com.xiaolu.usercenter.mapper.UserMapper;
+import com.xiaolu.usercenter.utils.AlgorithmUtils;
+import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
@@ -22,6 +27,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.xiaolu.usercenter.contant.UserConstant.USER_LOGIN_STATE;
 
@@ -42,6 +48,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      * 盐值，混淆密码
      */
     private static final String SALT = "xiaolu";
+
+    @Value("${deer.whitelistDeerCode}")
+    private String whitelistCode;
 
     @Override
     public long userRegister(UserRegisterRequest userRegisterRequest) {
@@ -85,11 +94,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
 
         // 通过晓鹿编号限制只允许四个用户 [1,2,3,4]
+        // 特殊编号 WhitelistCode 除外
+        List<String> whiteDeerCode = Arrays.asList(whitelistCode.split(","));
+
         List<String> deerCodes = new ArrayList<>();
         for (int i = 1; i < 5; i++) {
             deerCodes.add(i + "");
         }
-        if (!(deerCodes.contains(deerCode))) {
+        if (!(deerCodes.contains(deerCode)) && !(whiteDeerCode.contains(deerCode))) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "晓鹿编号错误");
         }
 
@@ -287,6 +299,61 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public boolean isAdmin(User loginUser) {
         // 鉴权 仅管理员可查询
         return loginUser != null && loginUser.getUserRole() == UserConstant.ADMIN_ROLE;
+    }
+
+    @Override
+    public List<User> matchUsers(long num, User loginUser) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(User::getId, User::getTags);
+        queryWrapper.isNotNull(User::getTags);
+        List<User> userList = this.list(queryWrapper);
+        String tags = loginUser.getTags();
+        Gson gson = new Gson();
+        List<String> tagList = gson.fromJson(tags, new TypeToken<List<String>>() {
+        }.getType());
+        // 用户列表的下标 => 相似度
+        // TreeMap: 默认是value从小到大排序
+        // SortedMap<Integer, Long> indexDistanceMap = new TreeMap<>();
+
+        // 依次计算所有用户和当前用户的相似度
+        List<Pair<User, Long>> list = new ArrayList<>();
+        for (int i = 0; i < userList.size(); i++) {
+            User user = userList.get(i);
+            String userTags = user.getTags();
+            // 无标签或者为当前用户自己
+            if (StringUtils.isBlank(userTags) || Objects.equals(user.getId(), loginUser.getId())) {
+                continue;
+            }
+            List<String> userTagList = gson.fromJson(userTags, new TypeToken<List<String>>() {
+            }.getType());
+            // 计算分数
+            long distance = AlgorithmUtils.minDistance(tagList, userTagList);
+            // indexDistanceMap.put(i, distance);
+            list.add(new Pair<>(user, distance));
+        }
+        // 按编辑距离由小到大
+        List<Pair<User, Long>> topUserPairList = list.stream()
+                .sorted((a, b) -> (int) (a.getValue() - b.getValue()))
+                .limit(num)
+                .collect(Collectors.toList());
+        // 记录原本顺序的 userId 列表
+        List<Long> userIdList = topUserPairList.stream().map(pair -> pair.getKey().getId()).collect(Collectors.toList());
+
+        queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(User::getId, userIdList);
+        // 由于 in 是乱序的，又会打乱起初排好的顺序，故需要通过 map 来映射再排序
+        // 1, 3, 2
+        // User1、User2、User3
+        // 1 => User1, 2 => User2, 3 => User3
+        Map<Long, List<User>> userIdUserListMap = this.list(queryWrapper)
+                .stream()
+                .map(this::getSafetyUser)
+                .collect(Collectors.groupingBy(User::getId));
+        List<User> userVOList = new ArrayList<>();
+        for (Long userId : userIdList) {
+            userVOList.add(userIdUserListMap.get(userId).get(0));
+        }
+        return userVOList;
     }
 
 

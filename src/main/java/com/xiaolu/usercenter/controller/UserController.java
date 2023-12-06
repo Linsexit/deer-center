@@ -10,6 +10,7 @@ import com.xiaolu.usercenter.model.domain.Chat;
 import com.xiaolu.usercenter.model.domain.User;
 import com.xiaolu.usercenter.model.request.UserLoginRequest;
 import com.xiaolu.usercenter.model.request.UserRegisterRequest;
+import com.xiaolu.usercenter.model.vo.UserVO;
 import com.xiaolu.usercenter.service.ChatService;
 import com.xiaolu.usercenter.service.UserService;
 import com.xiaolu.usercenter.utils.ResultUtils;
@@ -192,6 +193,19 @@ public class UserController {
         return ResultUtils.success(0);
     }
 
-
+    /**
+     * 获取最匹配的用户
+     * @param num
+     * @param request
+     * @return
+     */
+    @GetMapping("/match")
+    public BaseResponse<List<User>> matchUsers(long num, HttpServletRequest request) {
+        if (num <= 0 || num > 20) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User loginUser = userService.getLoginUser(request);
+        return ResultUtils.success(userService.matchUsers(num, loginUser));
+    }
 
 }

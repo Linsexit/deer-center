@@ -21,7 +21,7 @@ class MyWebConfigurer implements WebMvcConfigurer {
          */
         corsRegistry.addMapping("/**")
                 // 设置允许跨域请求的域名
-                .allowedOrigins("http://127.0.0.1:5173", "http://localhost:8000")
+                .allowedOrigins("http://localhost:3000", "http://127.0.0.1:5173", "http://localhost:8000","http://192.168.123.217:3000/")
                 // .allowedOriginPatterns("*")
                 // 设置允许的方法
                 .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")

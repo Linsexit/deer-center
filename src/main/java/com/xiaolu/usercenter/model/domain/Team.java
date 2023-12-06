@@ -40,7 +40,7 @@ public class Team implements Serializable {
     private Date expireTime;
 
     /**
-     * 用户id
+     * 队长id
      */
     private Long userId;
 

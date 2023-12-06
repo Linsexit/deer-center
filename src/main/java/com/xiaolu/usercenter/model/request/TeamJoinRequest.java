@@ -9,7 +9,7 @@ import java.util.Date;
  * @author 林小鹿
  * @version 1.0
  * @create 2023/9/28 20:49
- * @Description 用户登录请求体
+ * @Description 用户加入队伍请求体
  */
 @Data
 public class TeamJoinRequest implements Serializable {
