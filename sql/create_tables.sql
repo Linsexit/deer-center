@@ -1,3 +1,9 @@
+-- 创建库
+create database if not exists lu;
+
+-- 切换库
+use lu;
+
 -- auto-generated definition
 create table user
 (
