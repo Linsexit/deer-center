@@ -31,9 +31,9 @@ spring:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
   redis:
-    host: 117.72.17.110
+    host: xxx.xxx.xxx.xxx
     port: 6379
-    password: 520014
+    password: 123456
     # Redis默认提供了16个数据库，此处的0表示选择0号数据库
     database: 0
     jedis:
@@ -64,9 +64,10 @@ mybatis-plus:
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
 yuapi:
   client:
-    access-key: l5s5zli35utd974zy0vyxah0i08t8a9w
-    secret-key: 68iup8r47913htmigo87u1taf0xow20d
+    access-key: xxx
+    secret-key: xxx
 deer:
-  chatType: 1715378422630731777
-  whitelistDeerCode: A168,B705,X970,SDI8,FO82
+  chatType: xxx
+  # 设置登录白名单
+  whitelistDeerCode: xxx
 
