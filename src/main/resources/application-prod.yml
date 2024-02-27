@@ -4,7 +4,7 @@ spring:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://xxx:3306/user_center?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-      username: 
+      username:
       password: 
   # session超时时间（分钟）
   # 默认 store-type为 none 表示存储到内存中

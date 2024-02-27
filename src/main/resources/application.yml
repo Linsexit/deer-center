@@ -68,5 +68,6 @@ yuapi:
     secret-key: 68iup8r47913htmigo87u1taf0xow20d
 deer:
   chatType: 1715378422630731777
+  # 登录白名单
   whitelistDeerCode: A168,B705,X970,SDI8,FO82
 
